@@ -1,0 +1,21 @@
+Event Hub
+NameSpace Name: EHspacename
+Event Hub Name: eh_tweets
+Connection String: Endpoint=sb://ehspacename.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=LAv6rhfBxUhwJrI5kFDvHW+GFj866RWEZj38yk2OT6o=
+
+Shared Policy Name: TweetsSender
+Policy Key: Z1To5j+ISQQVugqazTV4YSR8gqd3CbxkmB3alF8sdM4=
+
+
+Twitter App
+
+Consumer Key: o15XnHDzDvGWv3l1enwV58yBq
+Consumer Secret: jON1UNSzhfk4eu5sws7RgLhpNCbkWsu06sRvwrKFjXwfu7uFHG
+
+Access Token: 1102066975541469184-TbS4fYGEvmq0Jltl91vs6E1dvVCqNO
+Access Token Secret: RCX08QzpIrnG2DmjEs8wTje0QDS9FdVsFTto1KW1M98b5
+
+Cognitive Services
+
+Endpoint: https://eastus.api.cognitive.microsoft.com/text/analytics/v2.0
+Key 1: 8c5fb6709dc0410384e8fdb8da42a76f
