@@ -1,5 +1,10 @@
+# --------------------------------------------------------------------------------------------
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License. See License.txt in the project root for license information.
+# --------------------------------------------------------------------------------------------
+
 ##############################################################
-##  Script en python para mandar N mensajes a un Event Hub  ##
+##  Script en python para mandar N eventos a un Event Hub  ##
 ##############################################################
 
 import os
@@ -18,7 +23,7 @@ SASName = "RootManageSharedAccessKey"
 # Llave de acceso para esa SAS
 PrimaryKey = "LAv6rhfBxUhwJrI5kFDvHW+GFj866RWEZj38yk2OT6o="
 
-# Intenta conectarse y mandar los mensajes
+# Intenta conectarse y mandar los eventos
 try:
     # En caso de no tener un URL valido
     if not sAddress:
@@ -35,7 +40,7 @@ try:
     """
     ehClient = EventHubClient(sAddress, SASName, PrimaryKey, debug=False)
 
-    # Agrega un sender para enviar los mensajes
+    # Agrega un sender para enviar los eventos
     ehSender = ehClient.add_sender()
 
     """ 
@@ -47,19 +52,19 @@ try:
 
     # Ejecuta el envío y cacha los posibles errores
     try:
-        iN = 100                    # Número de mensajes a enviar
-        start_time = time.time()    # Tiempo en el que comenzó el programa
+        iN = 100                 # Número de eventos a enviar
+        iniTime = time.time()    # Tiempo en el que comenzó el programa
 
-        # Loop para enviar iN mensajes
+        # Loop para enviar iN eventos
         for iI in range(iN):
-            # Crea el JSON String a enviar como mensaje
+            # Crea el JSON String a enviar como eventos
             message = "{ \"PartitionKey\": \"" + "PK" + str(iI) + "\", \"RowKey\": \"" + "RK" + str(
                 iI) + "\", \"Tweet\": \"" + "NAaaaaaah" + "\", \"Fecha\": \"" + "12-12-19" + "\" }"
 
-            # Imprime el número del mensaje enviado
+            # Imprime el número del eventos enviado
             print("Sending message: {}".format(str(iI)))
 
-            # Envía el mensaje
+            # Envía el eventos
             ehSender.send(EventData(str(message)))
 
     # Si hay un error en el envió
@@ -70,12 +75,12 @@ try:
     # Si todo acaba correcto
     finally:
 
-        end_time = time.time()              # Obtiene el tiempo final
-        ehClient.stop()                     # Detiene el cliente
-        run_time = end_time - start_time    # Obtiene la duración
+        endTime = time.time()          # Obtiene el tiempo final
+        ehClient.stop()                # Detiene el cliente
+        runTime = endTime - iniTime    # Obtiene la duración
 
         # Imprime la duración
-        print("Runtime: {} seconds".format(run_time))
+        print("Runtime: {} seconds".format(runTime))
 
 # Si se presiona Ctrl + C detiene el programa
 except KeyboardInterrupt:

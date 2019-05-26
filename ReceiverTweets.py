@@ -1,60 +1,101 @@
-#!/usr/bin/env python
-
 # --------------------------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
 
-"""
-An example to show receiving events from an Event Hub partition.
-"""
+########################################################################
+##  Script en python para recibir TODOS los eventos de un Event Hub   ##
+##  pero solo utiliza una partición.                                  ##
+########################################################################
+
 import os
 import sys
 import logging
 import time
 from azure.eventhub import EventHubClient, Receiver, Offset
 
-logger = logging.getLogger("azure")
+# Dirección URL para conectarse al Event Hub
+# "amqps://<Nombre del Event Hub Namespace>.servicebus.windows.net/<Nombre del Event Hub>"
+sAddress = "amqps://EHspacename.servicebus.windows.net/eh_tweets"
 
-# Address can be in either of these formats:
-# "amqps://<URL-encoded-SAS-policy>:<URL-encoded-SAS-key>@<mynamespace>.servicebus.windows.net/myeventhub"
-# "amqps://<mynamespace>.servicebus.windows.net/myeventhub"
-ADDRESS = "amqps://EHspacename.servicebus.windows.net/eh_tweets"
+# Nombre del "Shared Access Policy" configurado en el Event Hub Namespace
+SASName = "RootManageSharedAccessKey"
+# Llave de acceso para esa SAS
+PrimaryKey = "LAv6rhfBxUhwJrI5kFDvHW+GFj866RWEZj38yk2OT6o="
 
-# SAS policy and key are not required if they are encoded in the URL
-USER = "RootManageSharedAccessKey"
-KEY = "LAv6rhfBxUhwJrI5kFDvHW+GFj866RWEZj38yk2OT6o="
-CONSUMER_GROUP = "$default"
+# Nombre del grupo consumidor
+ConsumerGruop = "$default"
+# Offset desde el que se quiere empezar a recibir eventos
 OFFSET = Offset("-1")
-PARTITION = "0"
+# ID de la partición a utilizar del Event Hub
+Partition = "0"
 
+iTotal = 0         # Total de eventos recibidos
+lastSN = -1        # Last sequence number
+lasOffset = "-1"   # Received offset
 
-total = 0
-last_sn = -1
-last_offset = "-1"
-client = EventHubClient(ADDRESS, debug=False, username=USER, password=KEY)
+"""
+La clase EventHubClient define una conexión para enviar y recibir eventos
+Párametros:
+    address     = El URL para conectarse al Event Hub
+    username    = El nompre del SAS Policy
+    password    = La contraseña del SAS Policy
+    debug       = Si se quiere hacer debug de la conexión
+"""
+ehClient = EventHubClient(sAddress, SASName, PrimaryKey, debug=False)
 
+# Se conecta y recibe los eventos o atrapa cualquier posible error
 try:
-    receiver = client.add_receiver(CONSUMER_GROUP, PARTITION, prefetch=5000, offset=OFFSET)
-    client.run()
+    """
+    Crea un objeto Receiver.
+    Parametros: 
+        consumer_group      = Nombre del grupo consumidor
+        partition           = ID de la partición
+    """
+    receiver = ehClient.add_receiver(ConsumerGruop, Partition)
+
+    # Arranca el cliente
+    ehClient.run()
+    # Obtiene el tiempo inicial
     start_time = time.time()
-    batch = receiver.receive(timeout=5000)
 
-    while batch:
-        for event_data in batch:
-            last_offset = event_data.offset
-            last_sn = event_data.sequence_number
-            print("Received: {}, {}".format(last_offset.value, last_sn))
-            print(event_data.body_as_str())
-            total += 1
-        batch = receiver.receive(timeout=5000)
+    # Obtiene el primer batch de eventos
+    evBatch = receiver.receive(timeout=1000)
 
-    end_time = time.time()
-    client.stop()
+    # Mientras que la variable bach contenga eventos
+    while evBatch:
+
+        # Por cada evento...
+        for Event in evBatch:
+
+            lasOffset = Event.offset         # Obtener el offset del mensaje
+            lastSN = Event.sequence_number   # Se obtiene el número de secuencia
+
+            # Se imprime el offset del mensaje 
+            print("Received: {}, {}".format(lasOffset.value, lastSN))
+            # Se imprime el contenido del mensaje
+            print(Event.body_as_str())
+            # Se aumenta en uno el total de mensajes recibidos
+            iTotal += 1
+            # Obtiene el tiempo en que termino de procesar el evento
+            end_time = time.time()
+
+        # Obtiene el siguiente batch de eventos
+        # en caso de que en 10 segundos no encuentre nada el loop termina
+        evBatch = receiver.receive(timeout = 10)
+    
+    # Detiene el cliente para dejar de recibir eventos
+    ehClient.stop()
+    # Calcula el tiempo que estuvo recibiendo eventos
     run_time = end_time - start_time
-    print("Received {} messages in {} seconds".format(total, run_time))
 
+    # Imprime el resultado final
+    print("Received {} messages in {} seconds".format(iTotal, run_time))
+
+# Si hay una excepción del teclado, detiene el programa pero
+# no lo muestra en consola.
 except KeyboardInterrupt:
     pass
+# Y detiene al cliente
 finally:
-    client.stop()
+    ehClient.stop()

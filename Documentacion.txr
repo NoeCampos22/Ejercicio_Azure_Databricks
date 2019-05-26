@@ -4,3 +4,9 @@ https://docs.microsoft.com/es-es/python/api/azure-eventhub/azure.eventhub?view=a
 EventHubClient:
 https://docs.microsoft.com/es-es/python/api/azure-eventhub/azure.eventhub.client.eventhubclient?view=azure-python
 
+Sender Class:
+https://docs.microsoft.com/es-es/python/api/azure-eventhub/azure.eventhub.sender?view=azure-python
+
+Receiver Class:
+https://docs.microsoft.com/es-es/python/api/azure-eventhub/azure.eventhub.receiver.receiver?view=azure-python
+
