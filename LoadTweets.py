@@ -1,8 +1,3 @@
-# --------------------------------------------------------------------------------------------
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT License. See License.txt in the project root for license information.
-# --------------------------------------------------------------------------------------------
-
 ##############################################################
 ##  Script en python para mandar N eventos a un Event Hub  ##
 ##############################################################
@@ -16,7 +11,7 @@ from azure.eventhub import EventHubClient, Sender, EventData
 
 # Dirección URL para conectarse al Event Hub
 # "amqps://<Nombre del Event Hub Namespace>.servicebus.windows.net/<Nombre del Event Hub>"
-sAddress = "amqps://EHspacename.servicebus.windows.net/eh_tweets"
+ehAddress = "amqps://EHspacename.servicebus.windows.net/eh_tweets"
 
 # Nombre del "Shared Access Policy" configurado en el Event Hub Namespace
 SASName = "RootManageSharedAccessKey"
@@ -26,7 +21,7 @@ PrimaryKey = "LAv6rhfBxUhwJrI5kFDvHW+GFj866RWEZj38yk2OT6o="
 # Intenta conectarse y mandar los eventos
 try:
     # En caso de no tener un URL valido
-    if not sAddress:
+    if not ehAddress:
         # Notifica el error y termina el programa
         raise ValueError("No EventHubs URL supplied.")
 
@@ -38,7 +33,7 @@ try:
         password    = La contraseña del SAS Policy
         debug       = Si se quiere hacer debug de la conexión
     """
-    ehClient = EventHubClient(sAddress, SASName, PrimaryKey, debug=False)
+    ehClient = EventHubClient(ehAddress, SASName, PrimaryKey, debug=False)
 
     # Agrega un sender para enviar los eventos
     ehSender = ehClient.add_sender()

@@ -1,8 +1,3 @@
-# --------------------------------------------------------------------------------------------
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT License. See License.txt in the project root for license information.
-# --------------------------------------------------------------------------------------------
-
 ########################################################################
 ##  Script en python para recibir TODOS los eventos de un Event Hub   ##
 ##  pero solo utiliza una partición.                                  ##
@@ -10,8 +5,8 @@
 
 import os
 import sys
-import logging
 import time
+import logging
 from azure.eventhub import EventHubClient, Receiver, Offset
 
 # Dirección URL para conectarse al Event Hub

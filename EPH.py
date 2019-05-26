@@ -1,16 +1,15 @@
-# --------------------------------------------------------------------------------------------
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT License. See License.txt in the project root for license information.
-# -----------------------------------------------------------------------------------
+########################################################################
+##  Script en python para leer eventos que tenga un Event Hub pero    ##
+##  al mismo tiempo deja checkpoints para solo leer los nuevos.       ##
+########################################################################
 
+import os
+import sys
+import json
+import signal
 import logging
 import asyncio
-import sys
-import os
-import signal
 import functools
-import json
-
 from azure.eventprocessorhost import (
     AbstractEventProcessor,
     AzureStorageCheckpointLeaseManager,
@@ -20,118 +19,138 @@ from azure.eventprocessorhost import (
 
 
 class EventProcessor(AbstractEventProcessor):
-    """
-    Example Implmentation of AbstractEventProcessor
-    """
 
+    # Constructor de un Event Processor
     def __init__(self, params=None):
-        """
-        Init Event processor
-        """
         super().__init__(params)
         self._msg_counter = 0
 
+    # Función que se puede hacer override
+    # Es para inicializar un Procesador de Eventos
     async def open_async(self, context):
-        """
-        Called by processor host to initialize the event processor.
-        """
         print("Connection established {}".format(context.partition_id))
 
+    # Función que se puede hacer override
+    # Sirve para detener el Procesador de Eventos.
     async def close_async(self, context, reason):
-        """
-        Called by processor host to indicate that the event processor is being stopped.
-        :param context: Information about the partition
-        :type context: ~azure.eventprocessorhost.PartitionContext
-        """
+
         print("Connection closed (reason {}, id {}, offset {}, sq_number {})".format(
             reason,
             context.partition_id,
             context.offset,
             context.sequence_number))
 
+    # Función que se puede hacer override
+    """
+        Se llama cuando el EPH recibe un nuevo batch de eventos.
+        Es donde se programa las acciones a realizar.
+        Parametros:
+            context     = Información sobre la partición
+            messages    = El batch de eventos a procesar
+    """
     async def process_events_async(self, context, messages):
-        """
-        Called by the processor host when a batch of events has arrived.
-        This is where the real work of the event processor is done.
-        :param context: Information about the partition
-        :type context: ~azure.eventprocessorhost.PartitionContext
-        :param messages: The events to be processed.
-        :type messages: list[~azure.eventhub.common.EventData]
-        """
+        # Por cada evento...
+        for Event in messages:
+            # Se imprime el número de secuencia
+            print("Mensaje: {}".format(Event.sequence_number))
 
-        for event_data in messages:
-            last_sn = event_data.sequence_number
-            print("Mensaje: {}".format(last_sn))
+            # Se parsea el json recibido en el mensaje del evento
+            parsedMessage = json.loads(Event.body_as_str())
+            # Se imprime de manera más estetica
+            print(json.dumps(parsedMessage, indent=2, sort_keys=True))
 
-            # json.load method converts JSON string to Python Object
-            parsed = json.loads(event_data.body_as_str())
-            print(json.dumps(parsed, indent=2, sort_keys=True))
-
+        # Deja un checkpoint del evento recibido
         await context.checkpoint_async()
 
+    # Función que se puede hacer override
+    """
+        Se llama cada que el cliente experimenta algún error al recibir eventos.
+        El Event Proccessor Host se recupera recibiendo desde donde se quedo.
+        ( A menos de que se haya matado el programa )
+        Parametros:
+            context     = Información sobre la partición
+            messages    = El batch de eventos a procesar
+    """
     async def process_error_async(self, context, error):
-        """
-        Called when the underlying client experiences an error while receiving.
-        EventProcessorHost will take care of recovering from the error and
-        continuing to pump messages,so no action is required from
-        :param context: Information about the partition
-        :type context: ~azure.eventprocessorhost.PartitionContext
-        :param error: The error that occured.
-        """
         print("Event Processor Error {!r}".format(error))
 
-
+# Recibir eventos por dos minutos y luego apagarlo
 async def wait_and_close(host):
-    """
-    Run EventProcessorHost for 2 minutes then shutdown.
-    """
     await asyncio.sleep(60)
     await host.close_async()
 
-
+# Se conecta y recibe mensajes
 try:
-    loop = asyncio.get_event_loop()
+    # Regresa un loop asincrono
+    ephLoop = asyncio.get_event_loop()
 
-    # Storage Account Credentials
-    STORAGE_ACCOUNT_NAME = "stgeducon"
-    STORAGE_KEY = "ZSiqHjaX+3yooxOVZbffjbjaKnlMHWyYHBtxH2ANxle3EDMSqZ66cd75HUT0Tr48QPYRJus7XkwPT6aJ2wrAyQ=="
-    LEASE_CONTAINER_NAME = "contenedor"
+    # Nombre del Storage Account
+    stgName = "stgeducon"
+    # Key del storage
+    stgKey = "ZSiqHjaX+3yooxOVZbffjbjaKnlMHWyYHBtxH2ANxle3EDMSqZ66cd75HUT0Tr48QPYRJus7XkwPT6aJ2wrAyQ=="
+    # Nombre del Blob
+    blobName = "contenedor"
 
-    NAMESPACE = "EHspacename"
-    EVENTHUB = "eh_tweets"
-    USER = "TweetsReceiver"
-    KEY = "8A53abhSKTjOD1jXFCKSkbHGpK2tdSWxRIOkT+XFw24="
+    # Nombre del namespace de Event Hubs
+    ehNamespace = "EHspacename"
+    # Nombre del Event Hub
+    ehName = "eh_tweets"
+    # Nombre del SAS Policy del Event Hub
+    SASUser = "TweetsReceiver"
+    # Llave del SAS Policy del Event Hub
+    SASKey = "8A53abhSKTjOD1jXFCKSkbHGpK2tdSWxRIOkT+XFw24="
 
-    # Eventhub config and storage manager
-    eh_config = EventHubConfig(
-        NAMESPACE, EVENTHUB, USER, KEY, consumer_group="$default")
-    eh_options = EPHOptions()
-    eh_options.release_pump_on_timeout = True
-    eh_options.debug_trace = False
-    storage_manager = AzureStorageCheckpointLeaseManager(
-        STORAGE_ACCOUNT_NAME, STORAGE_KEY, LEASE_CONTAINER_NAME)
+    """
+    Configuración del Event Hub
+    Párametros:
+        sb_name   = Nombre del namespace de Event Hubs
+        eh_name   = Nombre del Event Hub
+        policy    = Nombre del SAS Policy
+        key       = Llave de la SAS Policy
+    """
+    ehConfig = EventHubConfig(ehNamespace, ehName, SASUser, SASKey)
 
-    # Event loop and host
-    host = EventProcessorHost(
+    # Opciones por default
+    ehOptions = EPHOptions()
+    # Set algunas opciones
+    ehOptions.release_pump_on_timeout = True
+    ehOptions.debug_trace = False
+
+    """
+    Configuración del Storage
+    Párametros:
+        storage_account_name    = Nombre del storage
+        storage_account_key     = Llave del storage
+        lease_container_name    = Nombre del contenedor
+    """
+    stgManager = AzureStorageCheckpointLeaseManager(
+        stgName, stgKey, blobName)
+
+    # Host del Event Hub Processor
+    ehHost = EventProcessorHost(
         EventProcessor,
-        eh_config,
-        storage_manager,
-        ep_params=["param1", "param2"],
-        eph_options=eh_options,
-        loop=loop)
+        ehConfig,
+        stgManager,
+        ep_params = ["param1", "param2"],
+        eph_options = ehOptions,
+        loop = ephLoop)
 
-    tasks = asyncio.gather(
-        host.open_async(),
-        wait_and_close(host))
+    # Prepara los procedimientos a ejecutar en loop
+    ephTasks = asyncio.gather(
+        ehHost.open_async(),
+        wait_and_close(ehHost))
 
-    loop.run_until_complete(tasks)
+    # Corre el loop
+    ephLoop.run_until_complete(ephTasks)
 
+# En caso de ocurrri excepciones de teclado
 except KeyboardInterrupt:
-    # Canceling pending tasks and stopping the loop
+    # Cancela las tareas y el loop
     for task in asyncio.Task.all_tasks():
         task.cancel()
-    loop.run_forever()
-    tasks.exception()
+    ephLoop.run_forever()
+    ephTasks.exception()
 
+# Cierra el loop
 finally:
-    loop.stop()
+    ephLoop.stop()
