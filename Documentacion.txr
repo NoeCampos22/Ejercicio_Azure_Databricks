@@ -10,3 +10,8 @@ https://docs.microsoft.com/es-es/python/api/azure-eventhub/azure.eventhub.sender
 Receiver Class:
 https://docs.microsoft.com/es-es/python/api/azure-eventhub/azure.eventhub.receiver.receiver?view=azure-python
 
+EventPrcessorHost:
+https://docs.microsoft.com/es-es/python/api/azure-eventhub/azure.eventprocessorhost?view=azure-python
+
+JSON:
+https://docs.python.org/3/library/json.html
