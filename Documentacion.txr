@@ -1,0 +1,6 @@
+EventHub: 
+https://docs.microsoft.com/es-es/python/api/azure-eventhub/azure.eventhub?view=azure-python
+
+EventHubClient:
+https://docs.microsoft.com/es-es/python/api/azure-eventhub/azure.eventhub.client.eventhubclient?view=azure-python
+

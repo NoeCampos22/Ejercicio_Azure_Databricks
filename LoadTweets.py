@@ -47,20 +47,37 @@ try:
 
     # Ejecuta el envío y cacha los posibles errores
     try:
-        iN = 100
-        start_time = time.time()
-        for i in range(iN):
-            message = "{ \"PartitionKey\": \"" + "PK" + str(i) + "\", \"RowKey\": \"" + "RK" + str(
-                i) + "\", \"Tweet\": \"" + "NAaaaaaah" + "\", \"Fecha\": \"" + "12-12-19" + "\" }"
-            print("Sending message: {}".format(message))
+        iN = 100                    # Número de mensajes a enviar
+        start_time = time.time()    # Tiempo en el que comenzó el programa
+
+        # Loop para enviar iN mensajes
+        for iI in range(iN):
+            # Crea el JSON String a enviar como mensaje
+            message = "{ \"PartitionKey\": \"" + "PK" + str(iI) + "\", \"RowKey\": \"" + "RK" + str(
+                iI) + "\", \"Tweet\": \"" + "NAaaaaaah" + "\", \"Fecha\": \"" + "12-12-19" + "\" }"
+
+            # Imprime el número del mensaje enviado
+            print("Sending message: {}".format(str(iI)))
+
+            # Envía el mensaje
             ehSender.send(EventData(str(message)))
+
+    # Si hay un error en el envió
     except:
+        # Lo notifica
         raise
+
+    # Si todo acaba correcto
     finally:
-        end_time = time.time()
-        ehClient.stop()
-        run_time = end_time - start_time
+
+        end_time = time.time()              # Obtiene el tiempo final
+        ehClient.stop()                     # Detiene el cliente
+        run_time = end_time - start_time    # Obtiene la duración
+
+        # Imprime la duración
         print("Runtime: {} seconds".format(run_time))
 
+# Si se presiona Ctrl + C detiene el programa
 except KeyboardInterrupt:
+    # Pero no muestra el la excepción en consola
     pass
