@@ -13,5 +13,14 @@ https://docs.microsoft.com/es-es/python/api/azure-eventhub/azure.eventhub.receiv
 EventPrcessorHost:
 https://docs.microsoft.com/es-es/python/api/azure-eventhub/azure.eventprocessorhost?view=azure-python
 
+Storage Documentation:
+https://docs.microsoft.com/es-es/python/api/overview/azure/storage?view=azure-python
+
+Examples Storage Code:
+https://github.com/Azure-Samples/storage-table-python-getting-started/blob/master/table_basic_samples.py
+
 JSON:
 https://docs.python.org/3/library/json.html
+
+Códigos Ejemplos en Python de Azure:
+https://github.com/Azure/azure-sdk-for-python
