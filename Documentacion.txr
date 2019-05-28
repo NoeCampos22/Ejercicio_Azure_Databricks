@@ -19,6 +19,9 @@ https://docs.microsoft.com/es-es/python/api/overview/azure/storage?view=azure-py
 Examples Storage Code:
 https://github.com/Azure-Samples/storage-table-python-getting-started/blob/master/table_basic_samples.py
 
+Call the Text Analytics Service using the Python SDK:
+https://docs.microsoft.com/en-us/azure/cognitive-services/text-analytics/quickstarts/python-sdk#language-detection
+
 JSON:
 https://docs.python.org/3/library/json.html
 

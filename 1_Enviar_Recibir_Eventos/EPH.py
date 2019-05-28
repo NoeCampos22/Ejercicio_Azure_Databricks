@@ -1,7 +1,7 @@
-########################################################################
-##  Script en python para leer eventos que tenga un Event Hub pero    ##
-##  al mismo tiempo deja checkpoints para solo leer los nuevos.       ##
-########################################################################
+#--------------------------------------------------------------------------
+# Script en python para leer eventos que tenga un Event Hub pero    
+# al mismo tiempo deja checkpoints para solo leer los nuevos.       
+#--------------------------------------------------------------------------
 
 import os
 import sys

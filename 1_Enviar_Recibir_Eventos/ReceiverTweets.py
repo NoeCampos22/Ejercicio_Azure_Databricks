@@ -1,7 +1,7 @@
-########################################################################
-##  Script en python para recibir TODOS los eventos de un Event Hub   ##
-##  pero solo utiliza una partición.                                  ##
-########################################################################
+#--------------------------------------------------------------------------
+#   Script en python para recibir TODOS los eventos de un Event Hub   
+#   pero solo utiliza una partición.                                  
+#--------------------------------------------------------------------------
 
 import os
 import sys
