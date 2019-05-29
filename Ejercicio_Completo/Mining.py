@@ -8,22 +8,21 @@ from tweepy import API
 from filteredTweet import filteredTweet
 
 # Importa las credenciales para el proyecto
-import Tw_Credentials
+import Credentials
 
 # Otros imports necesarios
 import json
 import time
 import pprint
 
+
 def Get_Authentication():
     """
     Para validar con Twitter las credenciales de la Twitter App
     """
-    Auth = OAuthHandler(Tw_Credentials.CON_KEY,
-                        Tw_Credentials.CON_KEY_SECRET)
+    Auth = OAuthHandler(Credentials.CON_KEY, Credentials.CON_KEY_SECRET)
     # Valida los tokens de acceso
-    Auth.set_access_token(Tw_Credentials.ACC_TOKEN,
-                            Tw_Credentials.ACC_TOKEN_SECRET)
+    Auth.set_access_token(Credentials.ACC_TOKEN, Credentials.ACC_TOKEN_SECRET)
     return Auth
 
 
@@ -51,7 +50,7 @@ class MyStreamListener(StreamListener):
             filterTweet = filteredTweet(parsed).serialize()
 
             # Crea un objeto Pretty Printer para el json
-            pp = pprint.PrettyPrinter(indent = 4)
+            pp = pprint.PrettyPrinter(indent=4)
 
             # Imprime el JSON
             pp.pprint(filterTweet)
@@ -69,7 +68,7 @@ class MyStreamListener(StreamListener):
 
 if __name__ == '__main__':
     # Un arreglo con las palabras claves a buscar
-    keyPhrases = ['#AvengersEndGame, EndGame, #Avengers, Avengers, #Vengadores, #LiguillaMX, @GameOfThrones, #ForTheThrone, #GameofThrones, @Marvel, @Avengers, @Wendy']
+    keyPhrases = ['#AvengersEndGame, EndGame, #Avengers, Avengers, #Vengadores, @GameOfThrones, #ForTheThrone, #GameofThrones, @Marvel, @Avengers, @Wendy']
     # keyPhrases = ['@TecdeMonterrey', '#OrgulloTec', '#EXATEC', '#SomosTec']
 
     print("====== Running App ======")
@@ -89,6 +88,7 @@ if __name__ == '__main__':
 
     # Si se presion Ctrl + C, termina el programa
     except KeyboardInterrupt:
+        print()
         pass
 
     # Cacha algun error que ocurra

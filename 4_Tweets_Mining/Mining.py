@@ -89,6 +89,7 @@ if __name__ == '__main__':
 
     # Si se presion Ctrl + C, termina el programa
     except KeyboardInterrupt:
+        print()
         pass
 
     # Cacha algun error que ocurra
