@@ -92,13 +92,15 @@ try:
     blobName = "contenedor"
 
     # Nombre del namespace de Event Hubs
-    ehNamespace = "EHspacename"
+    ehNamespace = "EHTweets"
     # Nombre del Event Hub
     ehName = "eh_tweets"
     # Nombre del SAS Policy del Event Hub
     SASUser = "TweetsReceiver"
     # Llave del SAS Policy del Event Hub
-    SASKey = "8A53abhSKTjOD1jXFCKSkbHGpK2tdSWxRIOkT+XFw24="
+    SASKey = "X6hcZGVDQmR7uFrwH5SuYNfHLiQxLiB+XMxky3BGwjA="
+
+
 
     """
     Configuración del Event Hub

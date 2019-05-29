@@ -11,12 +11,12 @@ from azure.eventhub import EventHubClient, Receiver, Offset
 
 # Dirección URL para conectarse al Event Hub
 # "amqps://<Nombre del Event Hub Namespace>.servicebus.windows.net/<Nombre del Event Hub>"
-sAddress = "amqps://EHspacename.servicebus.windows.net/eh_tweets"
+ehAddress = "amqps://EHTweets.servicebus.windows.net/eh_tweets"
 
 # Nombre del "Shared Access Policy" configurado en el Event Hub Namespace
 SASName = "RootManageSharedAccessKey"
 # Llave de acceso para esa SAS
-PrimaryKey = "LAv6rhfBxUhwJrI5kFDvHW+GFj866RWEZj38yk2OT6o="
+PrimaryKey = "XGpR/C3HHTdKN9NcrSD7nHHbpRglgk0VUmc1hhFlybs="
 
 # Nombre del grupo consumidor
 ConsumerGruop = "$default"

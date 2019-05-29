@@ -4,6 +4,8 @@ from tweepy import OAuthHandler
 from tweepy import Stream
 from tweepy import API
 
+from azure.eventhub import EventHubClient, Sender, EventData
+
 # Importar la clase Tweet del proyecto
 from filteredTweet import filteredTweet
 
@@ -15,6 +17,7 @@ import json
 import time
 import pprint
 
+ehSender = '-'
 
 def Get_Authentication():
     """
@@ -47,16 +50,21 @@ class MyStreamListener(StreamListener):
             parsed = json.loads(encoded)
 
             # Crea un objeto Tweet filtrado
-            filterTweet = filteredTweet(parsed).serialize()
+            fTweet = filteredTweet(parsed).serialize()
+            
+            strTweet = json.dumps(fTweet, ensure_ascii=False)
+            
+            ehSender.send(EventData(strTweet))
 
-            # Crea un objeto Pretty Printer para el json
-            pp = pprint.PrettyPrinter(indent=4)
-
-            # Imprime el JSON
-            pp.pprint(filterTweet)
+            # Imprime JSON
+            print(strTweet)
             print()
 
             return True
+
+        except KeyboardInterrupt:
+            print()
+            pass
 
         # Si hay un error, lo cacha
         except BaseException as e:
@@ -74,6 +82,13 @@ if __name__ == '__main__':
     print("====== Running App ======")
     try:
 
+        #La clase EventHubClient define una conexión para enviar y recibir eventos
+        ehClient = EventHubClient(Credentials.ehAddress, Credentials.ehSASName, Credentials.ehPrimaryKey, debug=False)
+        # Agrega un sender para enviar los eventos
+        ehSender = ehClient.add_sender()
+        #Abre las conecciones y corre los clientes Sender/Receiver
+        ehClient.run()
+
         # Obtiene la autenticación de las credenciales
         Auth = Get_Authentication()
         # Crea el objeto listener de tweets
@@ -88,7 +103,7 @@ if __name__ == '__main__':
 
     # Si se presion Ctrl + C, termina el programa
     except KeyboardInterrupt:
-        print()
+        ehClient.stop()
         pass
 
     # Cacha algun error que ocurra

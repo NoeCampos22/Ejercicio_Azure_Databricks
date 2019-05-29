@@ -46,7 +46,7 @@ try:
 
     # Ejecuta el envío y cacha los posibles errores
     try:
-        iN = 100                 # Número de eventos a enviar
+        iN = 10                  # Número de eventos a enviar
         iniTime = time.time()    # Tiempo en el que comenzó el programa
 
         # Loop para enviar iN eventos
