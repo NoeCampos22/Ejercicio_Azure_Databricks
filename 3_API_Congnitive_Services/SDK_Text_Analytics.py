@@ -43,8 +43,8 @@ documents = [
 # Se llama a la función para detectar el lenguaje
 response = text_analytics.detect_language(documents = documents)
 
-print("======= Detect languages ======")
 # Como regresa un arreglo, hay que recorrerlo
+print("======= Detect languages ======")
 for document in response.documents:
     # Se imprime el resultado de cada documento
     print("Document Id: ", document.id, ", Language: ",
@@ -81,11 +81,11 @@ documents = [
 # Se llama a la función responsable de analizar el sentimiento
 response = text_analytics.sentiment(documents = documents)
 
-print("====== Analyze sentiment ======")
 # Se imprime el resultado de cada documento
+print("====== Analyze sentiment ======")
 for document in response.documents:
-     print("Document Id: ", document.id, ", Sentiment Score: ",
-           "{:.2f}".format(document.score))
+        print("Document Id: ", document.id, ", Sentiment Score: ",
+            "{:.2f}".format(document.score))
 print("===============================\n\n")
 
 ################################# EXTRACT KEY PHRASES #################################
@@ -153,8 +153,8 @@ for document in response.documents:
     print("\tKey Entities:")
     for entity in document.entities:
         print("\t\t", "NAME: ", entity.name, "\tType: ",
-              entity.type, "\tSub-type: ", entity.sub_type)
+                entity.type, "\tSub-type: ", entity.sub_type)
         for match in entity.matches:
             print("\t\t\tOffset: ", match.offset, "\tLength: ", match.length, "\tScore: ",
-                  "{:.2f}\n".format(match.entity_type_score))
+                    "{:.2f}\n".format(match.entity_type_score))
 print("=================================\n\n")

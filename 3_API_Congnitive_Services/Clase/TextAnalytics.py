@@ -1,32 +1,72 @@
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 from msrest.authentication import CognitiveServicesCredentials
 
+
 class TextAnalytics():
 
+    """
+    Constructor: Se encarga de validar las credenciales y hacer la conexión
+    con el recurso en Azure.
+
+    Parametros:
+        SubscriptionKey     = La llave perteneciente al recurso de Cognitive Services
+        Location            = La locación del recurso, por ejemplo "eastus" o "westus"
+    """
+
     def __init__(self, SubscriptionKey, Location):
-        self.SubscriptionKey = SubscriptionKey
-        self. TA_URL = "https://{0}.api.cognitive.microsoft.com/".format(Location)
+        SubscriptionKey = SubscriptionKey
+        TA_URL = "https://{0}.api.cognitive.microsoft.com/".format(Location)
 
-        self.Credentials = CognitiveServicesCredentials(SubscriptionKey)
+        Credentials = CognitiveServicesCredentials(SubscriptionKey)
 
-        self.Text_Analytics = TextAnalyticsClient(endpoint = self.TA_URL
-        , credentials = self.Credentials)
+        self.Text_Analytics = TextAnalyticsClient(
+            endpoint=TA_URL, credentials=Credentials)
 
-    
     def detectLanguages(self, Documents):
-        arrLanguages = self.Text_Analytics.detect_language(documents = Documents)
+        """
+        Función encargada de hacer el llamado para detectar el lenguaje
+        y regresar el arreglo de lenguajes.
+
+        Parametros:
+            Documents   =   El arreglo con los objetos a analizar. Estos objetos DEBEN de tener
+                            los atributos "id" y "text".
+        """
+        arrLanguages = self.Text_Analytics.detect_language(documents=Documents)
 
         return arrLanguages
 
     def analyzeSentiment(self, Documents):
-        arrScore = self.Text_Analytics.sentiment(documents = Documents)
+        """
+        Función encargada de hacer el llamado para analizar el sentimiento y obtener un arreglo
+        con los puntjaes.
+
+        Parametros:
+            Documents   =   El arreglo con los objetos a analizar. Estos objetos DEBEN de tener
+                            los atributos "id", "langugae" y "text".
+        """
+        arrScore = self.Text_Analytics.sentiment(documents=Documents)
 
         return arrScore
 
     def keyPhrases(self, Documents):
-        matKeyPhrases = self.Text_Analytics.key_phrases(documents = Documents)
+        """
+        Función encargada de hacer el llamado para obtener un arreglo con las palabras clave
+
+        Parametros:
+            Documents   =   El arreglo con los objetos a analizar. Estos objetos DEBEN de tener
+                            los atributos "id", "langugae" y "text".
+        """
+        matKeyPhrases = self.Text_Analytics.key_phrases(documents=Documents)
 
         return matKeyPhrases
 
     def identifyEntites(self, Documents):
-        matEntitites = self.Text_Analytics.entities(documents = Documents)
+        """
+        Función encargada de hacer el llamado para identificar las entidades
+        Parametros:
+            Documents   =   El arreglo con los objetos a analizar. Estos objetos DEBEN de tener
+                            los atributos "id" y "text".
+        """
+        matEntitites = self.Text_Analytics.entities(documents=Documents)
+
+        return matEntitites
