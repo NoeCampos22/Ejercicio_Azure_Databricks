@@ -52,8 +52,10 @@ class MyStreamListener(StreamListener):
             # Crea un objeto Tweet filtrado
             fTweet = filteredTweet(parsed).serialize()
             
+            # Obtiene el json del tweet
             strTweet = json.dumps(fTweet, ensure_ascii=False)
             
+            # Lo envía
             ehSender.send(EventData(strTweet))
 
             # Imprime JSON
@@ -83,7 +85,7 @@ if __name__ == '__main__':
     try:
 
         #La clase EventHubClient define una conexión para enviar y recibir eventos
-        ehClient = EventHubClient(Credentials.ehAddress, Credentials.ehSASName, Credentials.ehPrimaryKey, debug=False)
+        ehClient = EventHubClient(Credentials.EH_Address, Credentials.EH_SASName, Credentials.EH_PrimaryKey, debug=False)
         # Agrega un sender para enviar los eventos
         ehSender = ehClient.add_sender()
         #Abre las conecciones y corre los clientes Sender/Receiver

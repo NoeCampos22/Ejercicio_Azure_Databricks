@@ -10,6 +10,11 @@ import signal
 import logging
 import asyncio
 import functools
+import Credentials
+
+from TextAnalytics import TextAnalytics
+from TableStorage import TableStorage
+
 from azure.eventprocessorhost import (
     AbstractEventProcessor,
     AzureStorageCheckpointLeaseManager,
@@ -17,11 +22,13 @@ from azure.eventprocessorhost import (
     EventProcessorHost,
     EPHOptions)
 
+STG_Table = '-'
+TA_CogServices = '-'
 
 class EventProcessor(AbstractEventProcessor):
 
     # Constructor de un Event Processor
-    def __init__(self, params=None):
+    def __init__(self, params = None):
         super().__init__(params)
         self._msg_counter = 0
 
@@ -49,15 +56,14 @@ class EventProcessor(AbstractEventProcessor):
             messages    = El batch de eventos a procesar
     """
     async def process_events_async(self, context, messages):
+
+        #=================== GUARDAR TWEETS ===================#
         # Por cada evento...
         for Event in messages:
-            # Se imprime el número de secuencia
-            print("Mensaje: {}".format(Event.sequence_number))
-
-            # Se parsea el json recibido en el mensaje del evento
+            #Se parsea el json recibido en el mensaje del evento
             parsedMessage = json.loads(Event.body_as_str())
-            # Se imprime de manera más estetica
-            print(parsedMessage)
+            #Se agrega a la tabla el tweet
+            STG_Table.insertEntity("Tweets", parsedMessage)
 
         # Deja un checkpoint del evento recibido
         await context.checkpoint_async()
@@ -76,28 +82,20 @@ class EventProcessor(AbstractEventProcessor):
 
 # Recibir eventos por dos minutos y luego apagarlo
 async def wait_and_close(host):
-    await asyncio.sleep(300)
     print("===========================Here===========================")
+    await asyncio.sleep(30)
     await host.close_async()
 
 # Se conecta y recibe mensajes
 try:
-    # Nombre del Storage Account
-    stgName = "stgeducon"
-    # Key del storage
-    stgKey = "ZSiqHjaX+3yooxOVZbffjbjaKnlMHWyYHBtxH2ANxle3EDMSqZ66cd75HUT0Tr48QPYRJus7XkwPT6aJ2wrAyQ=="
-    # Nombre del Blob
-    blobName = "contenedor"
+    # Crea una instancia del objecto Table Storage
+    STG_Table = TableStorage(Credentials.STG_ConnectionString)
 
-    # Nombre del namespace de Event Hubs
-    ehNamespace = "EHTweets"
-    # Nombre del Event Hub
-    ehName = "eh_tweets"
-    # Nombre del SAS Policy del Event Hub
-    SASUser = "TweetsReceiver"
-    # Llave del SAS Policy del Event Hub
-    SASKey = "X6hcZGVDQmR7uFrwH5SuYNfHLiQxLiB+XMxky3BGwjA="
+    # Crea una Table service
+    STG_Table.CreateTableServices()
 
+    TA_CogServices = TextAnalytics(
+        Credentials.TA_SubsKey, Credentials.TA_Location)
 
     """
     Configuración del Event Hub
@@ -107,45 +105,42 @@ try:
         policy    = Nombre del SAS Policy
         key       = Llave de la SAS Policy
     """
-    ehConfig = EventHubConfig(ehNamespace, ehName, SASUser, SASKey)
+    EPH_Config = EventHubConfig(Credentials.EH_Namespace, Credentials.EH_Name, Credentials.EH_SASUser, Credentials.EH_SASKey)
 
     # Opciones por default
-    ehOptions = EPHOptions()
+    EPH_Options = EPHOptions()
     # Set algunas opciones
-    ehOptions.release_pump_on_timeout = True
-    ehOptions.debug_trace = False
+    EPH_Options.release_pump_on_timeout = True
+    EPH_Options.debug_trace = False
 
     """
     Configuración del Storage
     Párametros:
-        storage_account_name    = Nombre del storage
-        storage_account_key     = Llave del storage
         lease_container_name    = Nombre del contenedor
+        connection_string       = Link de conexión al storage account
     """
-    stgManager = AzureStorageCheckpointLeaseManager(
-        stgName, stgKey, blobName)
+    STG_Manager = AzureStorageCheckpointLeaseManager(lease_container_name = Credentials.STG_BlobName, connection_string = Credentials.STG_ConnectionString)
 
     #while True:
     # Regresa un loop asincrono
-    ephLoop = asyncio.get_event_loop()
+    EPH_Loop = asyncio.get_event_loop()
 
     # Host del Event Hub Processor
-    ehHost = EventProcessorHost(
+    EPH_Host = EventProcessorHost(
         EventProcessor,
-        ehConfig,
-        stgManager,
+        EPH_Config,
+        STG_Manager,
         ep_params = ["param1", "param2"],
-        eph_options = ehOptions,
-        loop = ephLoop)
+        eph_options = EPH_Options,
+        loop = EPH_Loop)
 
     # Prepara los procedimientos a ejecutar en loop
-    ephTasks = asyncio.gather(
-        ehHost.open_async(),
-        wait_and_close(ehHost))
+    EPH_Tasks = asyncio.gather(
+        EPH_Host.open_async(),
+        wait_and_close(EPH_Host))
 
-    print("aldkjdnkasjdnkjsadhkjshd")
     # Corre el loop
-    ephLoop.run_until_complete(ephTasks)
+    EPH_Loop.run_until_complete(EPH_Tasks)
 
 
 # En caso de ocurrri excepciones de teclado
@@ -153,9 +148,9 @@ except KeyboardInterrupt:
     # Cancela las tareas y el loop
     for task in asyncio.Task.all_tasks():
         task.cancel()
-    ephLoop.run_forever()
-    ephTasks.exception()
+    EPH_Loop.run_forever()
+    EPH_Tasks.exception()
 
 # Cierra el loop
 finally:
-    ephLoop.stop()
+    EPH_Loop.stop()
