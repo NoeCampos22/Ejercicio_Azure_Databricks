@@ -57,13 +57,63 @@ class EventProcessor(AbstractEventProcessor):
     """
     async def process_events_async(self, context, messages):
 
+        TA_Array = []
+
+        for Msg in messages:
+            tempMsg = json.loads(Msg.body_as_str())
+            TA_Array.append(tempMsg)
+
+        # Se detecta los lenguajes
+        LanguagesRes = TA_CogServices.detectLanguages(TA_Array)
+
+        iI = 0 # Indice para moverse en el arreglo de tweets
+        # Se agrega el lenguaje detectado a cada tweet
+        for Doc in LanguagesRes.documents:
+            if LanguagesRes.documents is None:
+                TA_Array[iI]['language'] = "Uknown"
+            else:
+                TA_Array[iI]['language'] = Doc.detected_languages[0].iso6391_name
+            iI += 1
+
+        # Se analiza el sentimiento
+        ScoreRes = TA_CogServices.analyzeSentiment(TA_Array)
+        # Se analiza las frases clave
+        KeyPhrasesRes = TA_CogServices.keyPhrases(TA_Array)
+        # Se obtiene las entidades
+        EntitiesRes = TA_CogServices.identifyEntites(TA_Array)
+
+        iI = 0 # Indice para moverse en el arreglo de tweets
+        # Se agrega el score del sentimiento al tweet
+        for Doc in ScoreRes.documents:
+            TA_Array[iI]['Sentiment_Score'] = "{:.2f}".format(Doc.score)
+            iI += 1
+        
+        iI = 0 # Indice para moverse en el arreglo de tweets
+        # Se juntan todas las key phrases en solo string y se agregan al tweet 
+        # al que corresponden
+        for Doc in KeyPhrasesRes.documents:
+            strKP = "" # String temporal
+            # Va por el arreglo de Key Phrases de ese tweet
+            for Phrase in Doc.key_phrases:
+                # Los junta
+                strKP += Phrase + " | "
+
+            # Agrega el atributo
+            TA_Array[iI]['Key_Phrases'] = strKP
+            iI += 1
+
+        # Agrega la columna de RowKey
+        STG_Array = json.loads(json.dumps(TA_Array).replace("id", "RowKey"))
+
+        for Temp in STG_Array:
+            print(Temp)
+            print()
+
         #=================== GUARDAR TWEETS ===================#
-        # Por cada evento...
-        for Event in messages:
-            #Se parsea el json recibido en el mensaje del evento
-            parsedMessage = json.loads(Event.body_as_str())
+        #Por cada evento...
+        for Tweet in STG_Array:
             #Se agrega a la tabla el tweet
-            STG_Table.insertEntity("Tweets", parsedMessage)
+            STG_Table.insertEntity("Tweets", Tweet)
 
         # Deja un checkpoint del evento recibido
         await context.checkpoint_async()

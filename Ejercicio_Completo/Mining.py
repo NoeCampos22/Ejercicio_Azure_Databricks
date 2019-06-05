@@ -28,7 +28,6 @@ def Get_Authentication():
     Auth.set_access_token(Credentials.ACC_TOKEN, Credentials.ACC_TOKEN_SECRET)
     return Auth
 
-
 class MyStreamListener(StreamListener):
 
     # Revisa si hubo un error al escuchar twits
