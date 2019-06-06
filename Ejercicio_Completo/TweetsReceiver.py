@@ -57,11 +57,16 @@ class EventProcessor(AbstractEventProcessor):
     """
     async def process_events_async(self, context, messages):
 
+        # Arreglo para guardar los tweets recibidos del Event Hub
         TA_Array = []
 
+        # Se obtiene los JSON de todos los Tweets
         for Msg in messages:
             tempMsg = json.loads(Msg.body_as_str())
             TA_Array.append(tempMsg)
+
+
+        # ================ Obtener los lenguajes ================ #
 
         # Se detecta los lenguajes
         LanguagesRes = TA_CogServices.detectLanguages(TA_Array)
@@ -75,6 +80,8 @@ class EventProcessor(AbstractEventProcessor):
                 TA_Array[iI]['language'] = Doc.detected_languages[0].iso6391_name
             iI += 1
 
+        # ========== Realizar todos las operaciones ============ #
+
         # Se analiza el sentimiento
         ScoreRes = TA_CogServices.analyzeSentiment(TA_Array)
         # Se analiza las frases clave
@@ -82,14 +89,18 @@ class EventProcessor(AbstractEventProcessor):
         # Se obtiene las entidades
         EntitiesRes = TA_CogServices.identifyEntites(TA_Array)
 
+        # =========== Obtener Score del Sentimiento ============ #
+
         iI = 0 # Indice para moverse en el arreglo de tweets
         # Se agrega el score del sentimiento al tweet
         for Doc in ScoreRes.documents:
             TA_Array[iI]['Sentiment_Score'] = "{:.2f}".format(Doc.score)
             iI += 1
         
+        # ================ Obtener Key Phrases ================= #
+
         iI = 0 # Indice para moverse en el arreglo de tweets
-        # Se juntan todas las key phrases en solo string y se agregan al tweet 
+        # Juntan todas las key phrases en solo string y se agregan al tweet 
         # al que corresponden
         for Doc in KeyPhrasesRes.documents:
             strKP = "" # String temporal
@@ -102,24 +113,29 @@ class EventProcessor(AbstractEventProcessor):
             TA_Array[iI]['Key_Phrases'] = strKP
             iI += 1
 
-        iI = 0
+        # ================== Obtener Entidades ================== #
+
+        iI = 0 # Indice para moverse en el arreglo de tweets
+        # Junta todas las entidades de cada Tweet
         for Doc in EntitiesRes.documents:
-            strEnt = ""
+            strEnt = "" # String temporal
+            # Va por el arreglo de Entities de ese tweet
             for Entity in Doc.entities:
+                # Junta las entidades
                 strEnt += Entity.name + " | "
 
+            # Agrega el atributo
             TA_Array[iI]['Entities'] = strEnt
             iI += 1
 
-
-        # Agrega la columna de RowKey
+        # === Se cambia la cambia el row de "id" a "Rowkey" === #
         STG_Array = json.loads(json.dumps(TA_Array).replace("id", "RowKey"))
 
         for Temp in STG_Array:
             print(Temp)
             print()
 
-        #=================== GUARDAR TWEETS ===================#
+        # =================== GUARDAR TWEETS =================== #
         #Por cada evento...
         for Tweet in STG_Array:
             #Se agrega a la tabla el tweet
