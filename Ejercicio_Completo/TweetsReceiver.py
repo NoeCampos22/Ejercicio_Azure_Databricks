@@ -102,6 +102,16 @@ class EventProcessor(AbstractEventProcessor):
             TA_Array[iI]['Key_Phrases'] = strKP
             iI += 1
 
+        iI = 0
+        for Doc in EntitiesRes.documents:
+            strEnt = ""
+            for Entity in Doc.entities:
+                strEnt += Entity.name + " | "
+
+            TA_Array[iI]['Entities'] = strEnt
+            iI += 1
+
+
         # Agrega la columna de RowKey
         STG_Array = json.loads(json.dumps(TA_Array).replace("id", "RowKey"))
 
