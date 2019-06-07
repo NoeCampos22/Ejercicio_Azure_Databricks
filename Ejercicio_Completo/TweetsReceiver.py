@@ -1,8 +1,3 @@
-#--------------------------------------------------------------------------
-# Script en python para leer eventos que tenga un Event Hub pero    
-# al mismo tiempo deja checkpoints para solo leer los nuevos.       
-#--------------------------------------------------------------------------
-
 import os
 import sys
 import json
@@ -47,15 +42,16 @@ class EventProcessor(AbstractEventProcessor):
             context.offset,
             context.sequence_number))
 
-    # Función que se puede hacer override
-    """
-        Se llama cuando el EPH recibe un nuevo batch de eventos.
-        Es donde se programa las acciones a realizar.
-        Parametros:
-            context     = Información sobre la partición
-            messages    = El batch de eventos a procesar
-    """
     async def process_events_async(self, context, messages):
+        """
+            Función que se puede hacer override
+
+            Se llama cuando el EPH recibe un nuevo batch de eventos.
+            Es donde se programa las acciones a realizar.
+            Parametros:
+                context     = Información sobre la partición
+                messages    = El batch de eventos a procesar
+        """
 
         # Arreglo para guardar los tweets recibidos del Event Hub
         TA_Array = []
@@ -74,10 +70,7 @@ class EventProcessor(AbstractEventProcessor):
         iI = 0 # Indice para moverse en el arreglo de tweets
         # Se agrega el lenguaje detectado a cada tweet
         for Doc in LanguagesRes.documents:
-            if LanguagesRes.documents is None:
-                TA_Array[iI]['language'] = "Uknown"
-            else:
-                TA_Array[iI]['language'] = Doc.detected_languages[0].iso6391_name
+            TA_Array[iI]['language'] = Doc.detected_languages[0].iso6391_name
             iI += 1
 
         # ========== Realizar todos las operaciones ============ #
@@ -97,36 +90,36 @@ class EventProcessor(AbstractEventProcessor):
             TA_Array[iI]['Sentiment_Score'] = "{:.2f}".format(Doc.score)
             iI += 1
         
-        # ================ Obtener Key Phrases ================= #
+        # # ================ Obtener Key Phrases ================= #
 
-        iI = 0 # Indice para moverse en el arreglo de tweets
-        # Juntan todas las key phrases en solo string y se agregan al tweet 
-        # al que corresponden
-        for Doc in KeyPhrasesRes.documents:
-            strKP = "" # String temporal
-            # Va por el arreglo de Key Phrases de ese tweet
-            for Phrase in Doc.key_phrases:
-                # Los junta
-                strKP += Phrase + " | "
+        # iI = 0 # Indice para moverse en el arreglo de tweets
+        # # Juntan todas las key phrases en solo string y se agregan al tweet 
+        # # al que corresponden
+        # for Doc in KeyPhrasesRes.documents:
+        #     strKP = "" # String temporal
+        #     # Va por el arreglo de Key Phrases de ese tweet
+        #     for Phrase in Doc.key_phrases:
+        #         # Los junta
+        #         strKP += Phrase + " | "
 
-            # Agrega el atributo
-            TA_Array[iI]['Key_Phrases'] = strKP
-            iI += 1
+        #     # Agrega el atributo
+        #     TA_Array[iI]['Key_Phrases'] = strKP
+        #     iI += 1
 
-        # ================== Obtener Entidades ================== #
+        # # ================== Obtener Entidades ================== #
 
-        iI = 0 # Indice para moverse en el arreglo de tweets
-        # Junta todas las entidades de cada Tweet
-        for Doc in EntitiesRes.documents:
-            strEnt = "" # String temporal
-            # Va por el arreglo de Entities de ese tweet
-            for Entity in Doc.entities:
-                # Junta las entidades
-                strEnt += Entity.name + " | "
+        # iI = 0 # Indice para moverse en el arreglo de tweets
+        # # Junta todas las entidades de cada Tweet
+        # for Doc in EntitiesRes.documents:
+        #     strEnt = "" # String temporal
+        #     # Va por el arreglo de Entities de ese tweet
+        #     for Entity in Doc.entities:
+        #         # Junta las entidades
+        #         strEnt += Entity.name + " | "
 
-            # Agrega el atributo
-            TA_Array[iI]['Entities'] = strEnt
-            iI += 1
+        #     # Agrega el atributo
+        #     TA_Array[iI]['Entities'] = strEnt
+        #     iI += 1
 
         # === Se cambia la cambia el row de "id" a "Rowkey" === #
         STG_Array = json.loads(json.dumps(TA_Array).replace("id", "RowKey"))
@@ -137,29 +130,29 @@ class EventProcessor(AbstractEventProcessor):
 
         # =================== GUARDAR TWEETS =================== #
         #Por cada evento...
-        for Tweet in STG_Array:
-            #Se agrega a la tabla el tweet
-            STG_Table.insertEntity("Tweets", Tweet)
+        # for Tweet in STG_Array:
+        #     #Se agrega a la tabla el tweet
+        #     STG_Table.insertEntity("Tweets", Tweet)
 
         # Deja un checkpoint del evento recibido
         await context.checkpoint_async()
 
-    # Función que se puede hacer override
-    """
-        Se llama cada que el cliente experimenta algún error al recibir eventos.
-        El Event Proccessor Host se recupera recibiendo desde donde se quedo.
-        ( A menos de que se haya matado el programa )
-        Parametros:
-            context     = Información sobre la partición
-            messages    = El batch de eventos a procesar
-    """
     async def process_error_async(self, context, error):
+        # Función que se puede hacer override
+        """
+            Se llama cada que el cliente experimenta algún error al recibir eventos.
+            El Event Proccessor Host se recupera recibiendo desde donde se quedo.
+            ( A menos de que se haya matado el programa )
+            Parametros:
+                context     = Información sobre la partición
+                messages    = El batch de eventos a procesar
+        """
         print("Event Processor Error {!r}".format(error))
 
 # Recibir eventos por dos minutos y luego apagarlo
 async def wait_and_close(host):
     print("===========================Here===========================")
-    await asyncio.sleep(30)
+    await asyncio.sleep(3600)
     await host.close_async()
 
 # Se conecta y recibe mensajes

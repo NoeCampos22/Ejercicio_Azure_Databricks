@@ -1,6 +1,5 @@
 import re
 import datetime
-import TextAnalytics
 
 # It is a tweet class but only with the attributes that interest me
 class filteredTweet:
@@ -18,9 +17,4 @@ class filteredTweet:
 
     def serialize(self):
         return self.__dict__
-
-        # self.language = '-'
-        # self.SentimentScore = 0
-        # self.KeyPhrases = ''
-        # self.Entities = ''
 

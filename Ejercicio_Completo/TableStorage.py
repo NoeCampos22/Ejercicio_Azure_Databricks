@@ -70,9 +70,9 @@ class TableStorage():
             TableName   = Nombre de la tabla que se quiere crear
             Entity      = El objecto con la entidad que se quiere agregar
         """
-        print('\nInserting a new entity into table - ' + TableName)
+        #print('\nInserting a new entity into table - ' + TableName)
         self.TableService.insert_or_merge_entity(TableName, Entity)
-        print('Successfully inserted the new entity')
+        #print('Successfully inserted the new entity')
 
     def getEntity(self, TableName, PartitionKey, RowKey):
         """

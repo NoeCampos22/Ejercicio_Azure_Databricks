@@ -30,5 +30,5 @@ STG_ConnectionString = 'DefaultEndpointsProtocol=https;AccountName=stgeducon;Acc
 STG_BlobName = "contenedor"
 
 #===================== Cognitive Services ======================#
-TA_SubsKey = "8c5fb6709dc0410384e8fdb8da42a76f"
+TA_SubsKey = "2520811caaf6405fba90c9370ad89790"
 TA_Location = "eastus"
