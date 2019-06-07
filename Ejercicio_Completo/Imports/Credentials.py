@@ -1,3 +1,12 @@
+#-------------------------------------------------------------------------
+# Script con las llaves, nombres y permisos necesarios para completar el
+# ejercicio de analizar tweets utlizando una aplicación de Twitter,
+# Event Hub de Azure, Cognitive Services y Table Storage-
+#
+# Autor: Noé Amador Campos Castillo.
+# E-mail: ama-noe@hotmail.com
+#--------------------------------------------------------------------------
+
 #========================== Twitter App ==========================#
 # Variables con las llaves de acceso a la aplicación de Twitter
 ACC_TOKEN = "1102066975541469184-TbS4fYGEvmq0Jltl91vs6E1dvVCqNO"
@@ -21,7 +30,7 @@ EH_Name = "eh_tweets"
 # Nombre del SAS Policy de la instancia de Event Hub
 EH_SASUser = "TweetsReceiver"
 # Llave del SAS Policy de la instancia de Event Hub
-EH_SASKey = "X6hcZGVDQmR7uFrwH5SuYNfHLiQxLiB+XMxky3BGwjA="
+EH_SASKey = "qS2Td4Ze5RgXlGxptAsdR5hizNm8NBpf8W2n5f7TcNI="
 
 #=========================== Storage ===========================#
 # El string de conexión al storage account
@@ -30,5 +39,5 @@ STG_ConnectionString = 'DefaultEndpointsProtocol=https;AccountName=stgeducon;Acc
 STG_BlobName = "contenedor"
 
 #===================== Cognitive Services ======================#
-TA_SubsKey = "2520811caaf6405fba90c9370ad89790"
+TA_SubsKey = "48c28dbe3a9d449eab19fa460c01de5e"
 TA_Location = "eastus"

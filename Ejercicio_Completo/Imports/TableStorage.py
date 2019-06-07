@@ -6,10 +6,9 @@
 #   1-. Tener Python 3.4 o mayor.
 #   2-. Tener el instalador de paquetes "pip".
 #   3-. Ingresar el comando "pip install azure-storage"
-#   4-. Listo
 #
 # Autor: Noé Amador Campos Castillo.
-# E-mail: noecampos@tec.mx
+# E-mail: ama-noe@hotmail.com
 #--------------------------------------------------------------------------
 
 from azure.storage import CloudStorageAccount
@@ -24,14 +23,14 @@ class TableStorage():
 
     Parametros:
         CONNECTION_STRING   = El string que incluye el AccountName, 
-                              AccountKey y el EndPointSuffix
+                                AccountKey y el EndPointSuffix
     """
     def __init__(self, CONNECTION_STRING):
         self.CONNECTION_STRING = CONNECTION_STRING
 
         # Separa por partes el string de conexión
         Config = dict(s.split('=', 1)
-                      for s in CONNECTION_STRING.split(';') if s)
+                        for s in CONNECTION_STRING.split(';') if s)
 
         # Obtiene el nombre de la cuenta de storage y en EndpointSuffix
         self.AccountName = Config.get('AccountName')
@@ -44,8 +43,8 @@ class TableStorage():
         el storage en Azure
         """
         self.TableService = TableService(account_name=self.AccountName,
-                                         connection_string=self.CONNECTION_STRING,
-                                         endpoint_suffix=self.EndPointSuffix)
+                                        connection_string=self.CONNECTION_STRING,
+                                        endpoint_suffix=self.EndPointSuffix)
 
     def createTable(self, TableName):
         """
