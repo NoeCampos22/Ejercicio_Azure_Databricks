@@ -10,13 +10,13 @@ from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 from msrest.authentication import CognitiveServicesCredentials
 
 # Llave del recurso de Cognitive services en Azure
-subscription_key = "8c5fb6709dc0410384e8fdb8da42a76f"
+subscription_key = "-"
 # Objeto credenciales de cognitive services
 credentials = CognitiveServicesCredentials(subscription_key)
 
 # URL para conectarse al recurso, el template es:
 # https://<location>.api.cognitive.microsoft.com/
-text_analytics_url = "https://eastus.api.cognitive.microsoft.com/"
+text_analytics_url = "-"
 
 # Cliente de servicios de cognitivos
 text_analytics = TextAnalyticsClient(

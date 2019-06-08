@@ -1,6 +1,16 @@
-#--------------------------------------------------------------------------
-# Script en python para leer eventos que tenga un Event Hub pero    
-# al mismo tiempo deja checkpoints para solo leer los nuevos.       
+#-------------------------------------------------------------------------
+# Script en python que se encarga de conectarse a un recurso Event Hub de 
+# Microsoft Azure y leer todos los mensajes disponibles, al mismo tiempo
+# que deja un checkpoint de lo que ha leído para no repetir mensajes 
+# la siguiente vez que arranque el programa.
+#
+# Instrucciones para utilizarla.
+#   1-. Tener Python 3.4 o mayor.
+#   2-. Tener el instalador de paquetes "pip".
+#   3-. Ingresar el comando "pip install azure-eventhub"
+#
+# Autor: Noé Amador Campos Castillo.
+# E-mail: noecampos@tec.mx
 #--------------------------------------------------------------------------
 
 import os
@@ -85,20 +95,20 @@ try:
     ephLoop = asyncio.get_event_loop()
 
     # Nombre del Storage Account
-    stgName = "stgeducon"
+    stgName = "-"
     # Key del storage
-    stgKey = "ZSiqHjaX+3yooxOVZbffjbjaKnlMHWyYHBtxH2ANxle3EDMSqZ66cd75HUT0Tr48QPYRJus7XkwPT6aJ2wrAyQ=="
+    stgKey = "-"
     # Nombre del Blob
-    blobName = "contenedor"
+    blobName = "-"
 
     # Nombre del namespace de Event Hubs
-    ehNamespace = "EHTweets"
+    ehNamespace = "-"
     # Nombre del Event Hub
-    ehName = "eh_tweets"
+    ehName = "-"
     # Nombre del SAS Policy del Event Hub
-    SASUser = "TweetsReceiver"
+    SASUser = "-"
     # Llave del SAS Policy del Event Hub
-    SASKey = "X6hcZGVDQmR7uFrwH5SuYNfHLiQxLiB+XMxky3BGwjA="
+    SASKey = "-"
 
 
 

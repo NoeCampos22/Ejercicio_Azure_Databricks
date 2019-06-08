@@ -1,3 +1,16 @@
+#-------------------------------------------------------------------------
+# Clase para crear una conexión y utilizar los recursos de Text Analytics 
+# Cognitive Services de Microsoft Azure
+#
+# Instrucciones para utilizarla.
+#   1-. Tener Python 3.4 o mayor.
+#   2-. Tener el instalador de paquetes "pip".
+#   3-. Ingresar el comando "pip install --upgrade azure-cognitiveservices-language-textanalytics"
+#
+# Autor: Noé Amador Campos Castillo.
+# E-mail: noecampos@tec.mx
+#--------------------------------------------------------------------------
+
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 from msrest.authentication import CognitiveServicesCredentials
 

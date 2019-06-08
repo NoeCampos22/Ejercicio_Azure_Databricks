@@ -8,7 +8,7 @@
 #   3-. Ingresar el comando "pip install azure-storage"
 #
 # Autor: Noé Amador Campos Castillo.
-# E-mail: ama-noe@hotmail.com
+# E-mail: noecampos@tec.mx
 #--------------------------------------------------------------------------
 
 from azure.storage import CloudStorageAccount

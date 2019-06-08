@@ -1,5 +1,14 @@
-#--------------------------------------------------------------------------
-#       Script en python para mandar N eventos a un Event Hub  ##
+#-------------------------------------------------------------------------
+# Programa que se encarga de conectarse con un recurso de Event Hub
+# de Microsoft Azure y le envía N mensajes.
+#
+# Instrucciones para utilizarla.
+#   1-. Tener Python 3.4 o mayor.
+#   2-. Tener el instalador de paquetes "pip".
+#   3-. Ingresar el comando "pip install azure-eventhub"
+#
+# Autor: Noé Amador Campos Castillo.
+# E-mail: noecampos@tec.mx
 #--------------------------------------------------------------------------
 
 import os
@@ -10,12 +19,12 @@ from azure.eventhub import EventHubClient, Sender, EventData
 
 # Dirección URL para conectarse al Event Hub
 # "amqps://<Nombre del Event Hub Namespace>.servicebus.windows.net/<Nombre del Event Hub>"
-ehAddress = "amqps://EHTweets.servicebus.windows.net/eh_tweets"
+ehAddress = "-"
 
 # Nombre del "Shared Access Policy" configurado en el Event Hub Namespace
-SASName = "RootManageSharedAccessKey"
+SASName = "_"
 # Llave de acceso para esa SAS
-PrimaryKey = "XGpR/C3HHTdKN9NcrSD7nHHbpRglgk0VUmc1hhFlybs="
+PrimaryKey = "-"
 
 # Intenta conectarse y mandar los eventos
 try:
@@ -53,7 +62,7 @@ try:
         for iI in range(iN):
             # Crea el JSON String a enviar como eventos
             message = "{ \"PartitionKey\": \"" + "PK" + str(iI) + "\", \"RowKey\": \"" + "RK" + str(
-                iI) + "\", \"Tweet\": \"" + "NAaaaaaah" + "\", \"Fecha\": \"" + "12-12-19" + "\" }"
+                iI) + "\", \"Text\": \"" + "NAaaaaaah" + "\", \"Fecha\": \"" + "12-12-19" + "\" }"
 
             # Imprime el número del eventos enviado
             print("Sending message: {}".format(str(iI)))

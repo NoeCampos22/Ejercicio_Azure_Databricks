@@ -1,6 +1,14 @@
-#--------------------------------------------------------------------------
-#   Script en python para recibir TODOS los eventos de un Event Hub   
-#   pero solo utiliza una partición.                                  
+#-------------------------------------------------------------------------
+# Script para conectarse a un Event Hub y recibir los mensajes, pero
+# son TODOS los que estan disponibles en el Event Hub
+#
+# Instrucciones para utilizarla.
+#   1-. Tener Python 3.4 o mayor.
+#   2-. Tener el instalador de paquetes "pip".
+#   3-. Ingresar el comando "pip install azure-eventhub"
+#
+# Autor: Noé Amador Campos Castillo.
+# E-mail: noecampos@tec.mx
 #--------------------------------------------------------------------------
 
 import os
@@ -11,19 +19,19 @@ from azure.eventhub import EventHubClient, Receiver, Offset
 
 # Dirección URL para conectarse al Event Hub
 # "amqps://<Nombre del Event Hub Namespace>.servicebus.windows.net/<Nombre del Event Hub>"
-ehAddress = "amqps://EHTweets.servicebus.windows.net/eh_tweets"
+EH_Address = "-"
 
 # Nombre del "Shared Access Policy" configurado en el Event Hub Namespace
-SASName = "RootManageSharedAccessKey"
+EH_SASName = "-"
 # Llave de acceso para esa SAS
-PrimaryKey = "XGpR/C3HHTdKN9NcrSD7nHHbpRglgk0VUmc1hhFlybs="
+EH_PrimaryKey = "-"
 
 # Nombre del grupo consumidor
-ConsumerGruop = "$default"
+EH_ConsumerGruop = "-"
 # Offset desde el que se quiere empezar a recibir eventos
 OFFSET = Offset("-1")
 # ID de la partición a utilizar del Event Hub
-Partition = "0"
+EH_Partition = "0"
 
 iTotal = 0         # Total de eventos recibidos
 lastSN = -1        # Last sequence number
@@ -37,7 +45,7 @@ Párametros:
     password    = La contraseña del SAS Policy
     debug       = Si se quiere hacer debug de la conexión
 """
-ehClient = EventHubClient(sAddress, SASName, PrimaryKey, debug=False)
+EH_Client = EventHubClient(EH_Address, EH_SASName, EH_PrimaryKey, debug=False)
 
 # Se conecta y recibe los eventos o atrapa cualquier posible error
 try:
@@ -47,15 +55,15 @@ try:
         consumer_group      = Nombre del grupo consumidor
         partition           = ID de la partición
     """
-    receiver = ehClient.add_receiver(ConsumerGruop, Partition)
+    EH_Receiver = EH_Client.add_receiver(EH_ConsumerGruop, EH_Partition)
 
     # Arranca el cliente
-    ehClient.run()
+    EH_Client.run()
     # Obtiene el tiempo inicial
     start_time = time.time()
 
     # Obtiene el primer batch de eventos
-    evBatch = receiver.receive(timeout=1000)
+    evBatch = EH_Receiver.receive(timeout=1000)
 
     # Mientras que la variable bach contenga eventos
     while evBatch:
@@ -77,10 +85,10 @@ try:
 
         # Obtiene el siguiente batch de eventos
         # en caso de que en 10 segundos no encuentre nada el loop termina
-        evBatch = receiver.receive(timeout = 10)
+        evBatch = EH_Receiver.receive(timeout = 10)
     
     # Detiene el cliente para dejar de recibir eventos
-    ehClient.stop()
+    EH_Client.stop()
     # Calcula el tiempo que estuvo recibiendo eventos
     run_time = end_time - start_time
 
@@ -93,4 +101,4 @@ except KeyboardInterrupt:
     pass
 # Y detiene al cliente
 finally:
-    ehClient.stop()
+    EH_Client.stop()

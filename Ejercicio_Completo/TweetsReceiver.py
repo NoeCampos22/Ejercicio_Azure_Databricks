@@ -16,7 +16,7 @@
 #           c) Credentials
 #
 # Autor: Noé Amador Campos Castillo.
-# E-mail: ama-noe@hotmail.com
+# E-mail: noecampos@tec.mx
 #--------------------------------------------------------------------------
 
 # Los imports generales

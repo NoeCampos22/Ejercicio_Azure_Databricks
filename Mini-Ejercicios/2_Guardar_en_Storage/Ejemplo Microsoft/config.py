@@ -17,4 +17,4 @@
 #--------------------------------------------------------------------------
 
 IS_EMULATED = False
-STORAGE_CONNECTION_STRING = 'DefaultEndpointsProtocol=https;AccountName=stgeducon;AccountKey=ZSiqHjaX+3yooxOVZbffjbjaKnlMHWyYHBtxH2ANxle3EDMSqZ66cd75HUT0Tr48QPYRJus7XkwPT6aJ2wrAyQ==;EndpointSuffix=core.windows.net'
+STORAGE_CONNECTION_STRING = '-'

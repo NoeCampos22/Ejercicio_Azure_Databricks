@@ -1,3 +1,11 @@
+#-------------------------------------------------------------------------
+# Script encargada de conectarse a la API Tweepy, para escuchar
+# y traerse los tweets que cumplan con el filtro especificado.
+#
+# Autor: Noé Amador Campos Castillo.
+# E-mail: noecampos@tec.mx
+#--------------------------------------------------------------------------
+
 # Se importa Tweepy
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
@@ -5,7 +13,7 @@ from tweepy import Stream
 from tweepy import API
 
 # Importar la clase Tweet del proyecto
-from filteredTweet import filteredTweet
+from simplerTweet import simplerTweet
 
 # Importa las credenciales para el proyecto
 import Tw_Credentials
@@ -48,7 +56,7 @@ class MyStreamListener(StreamListener):
             parsed = json.loads(encoded)
 
             # Crea un objeto Tweet filtrado
-            filterTweet = filteredTweet(parsed).serialize()
+            filterTweet = simplerTweet(parsed).serialize()
 
             # Crea un objeto Pretty Printer para el json
             pp = pprint.PrettyPrinter(indent = 4)
@@ -70,7 +78,6 @@ class MyStreamListener(StreamListener):
 if __name__ == '__main__':
     # Un arreglo con las palabras claves a buscar
     keyPhrases = ['#AvengersEndGame, EndGame, #Avengers, Avengers, #Vengadores, #LiguillaMX, @GameOfThrones, #ForTheThrone, #GameofThrones, @Marvel, @Avengers, @Wendy']
-    # keyPhrases = ['@TecdeMonterrey', '#OrgulloTec', '#EXATEC', '#SomosTec']
 
     print("====== Running App ======")
     try:

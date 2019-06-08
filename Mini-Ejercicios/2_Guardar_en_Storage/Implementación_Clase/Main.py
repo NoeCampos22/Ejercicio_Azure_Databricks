@@ -1,12 +1,21 @@
-##############################################################################
-##  Mini script para poner ejemplos de como utlizar la clase TableStorage   ##
-##############################################################################
+#-------------------------------------------------------------------------
+# Script corto donde se ejemplefica la implementación de la clase 
+# TableStorage ubicada en el mismo directorio que este.
+#
+# Instrucciones para utilizarla.
+#   1-. Tener Python 3.4 o mayor.
+#   2-. Tener el instalador de paquetes "pip".
+#   3-. Ingresar el comando "pip install azure-storage"
+#
+# Autor: Noé Amador Campos Castillo.
+# E-mail: noecampos@tec.mx
+#--------------------------------------------------------------------------
 
 import json
 from TableStorage import TableStorage
 
 # El string de conexión al storage account
-ConnectionString = 'DefaultEndpointsProtocol=https;AccountName=stgeducon;AccountKey=ZSiqHjaX+3yooxOVZbffjbjaKnlMHWyYHBtxH2ANxle3EDMSqZ66cd75HUT0Tr48QPYRJus7XkwPT6aJ2wrAyQ==;EndpointSuffix=core.windows.net'
+ConnectionString = '--'
 
 # Crea una instancia del objecto Table Storage
 TableStorage = TableStorage(ConnectionString)

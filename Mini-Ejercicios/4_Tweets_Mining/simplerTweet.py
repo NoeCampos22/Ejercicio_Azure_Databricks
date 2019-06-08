@@ -14,6 +14,7 @@ class simplerTweet:
     Tweet origianl de Twitter
     """
     # Constructor
+
     def __init__(self, ogTweet):
         self.PartitionKey = "Tweets"
         self.id = ogTweet['id_str']
@@ -22,4 +23,3 @@ class simplerTweet:
     # Para regresar el json
     def serialize(self):
         return self.__dict__
-

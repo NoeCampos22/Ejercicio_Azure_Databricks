@@ -11,11 +11,11 @@ import json
 from IPython.display import HTML
 
 # La llave de recurso de Cognitive Services
-subscription_key = "8c5fb6709dc0410384e8fdb8da42a76f"
+subscription_key = "-"
 
 # Es el link del recurso, el template es:
 # "https://<location>.api.cognitive.microsoft.com/text/analytics/v2.1/"
-text_analytics_base_url = "https://eastus.api.cognitive.microsoft.com/text/analytics/v2.1/"
+text_analytics_base_url = "-"
 
 # Son los links para las diferentes peticiones
 language_api_url = text_analytics_base_url + "languages"

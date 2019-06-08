@@ -6,7 +6,6 @@
 #   1-. Tener Python 3.4 o mayor.
 #   2-. Tener el instalador de paquetes "pip".
 #   3-. Ingresar el comando "pip install azure-storage"
-#   4-. Listo
 #
 # Autor: Noé Amador Campos Castillo.
 # E-mail: noecampos@tec.mx
@@ -18,15 +17,15 @@ from azure.storage.table import TableService, Entity
 # Clase para crear una instancia de TableServices y usar sus funciones
 class TableStorage():
 
-    """
-    Constructor. Espera el Connection String del Azure Storage Account.
-    Se obtiene ingresando al recurso de Storage -> Access Keys
-
-    Parametros:
-        CONNECTION_STRING   = El string que incluye el AccountName, 
-                              AccountKey y el EndPointSuffix
-    """
     def __init__(self, CONNECTION_STRING):
+        """
+        Constructor. Espera el Connection String del Azure Storage Account.
+        Se obtiene ingresando al recurso de Storage -> Access Keys
+
+        Parametros:
+            CONNECTION_STRING   = El string que incluye el AccountName, 
+                                AccountKey y el EndPointSuffix
+        """
         self.CONNECTION_STRING = CONNECTION_STRING
 
         # Separa por partes el string de conexión
@@ -47,6 +46,8 @@ class TableStorage():
                                          connection_string=self.CONNECTION_STRING,
                                          endpoint_suffix=self.EndPointSuffix)
 
+    
+    
     def createTable(self, TableName):
         """
         Revisa si la tabla no exista ya y la crea. De lo contrario, avisa que ya existe.
@@ -62,6 +63,8 @@ class TableStorage():
         else:
             print('Error creating table, ' + TableName + ' check if it already exists')
 
+
+    
     def insertEntity(self, TableName, Entity):
         """
         Se inserta una entidad a la tabla especificada.
@@ -74,6 +77,8 @@ class TableStorage():
         self.TableService.insert_or_merge_entity(TableName, Entity)
         print('Successfully inserted the new entity')
 
+
+    
     def getEntity(self, TableName, PartitionKey, RowKey):
         """
         Traerse la entidad completa en base a la Partition Key y Row Key.
@@ -89,6 +94,8 @@ class TableStorage():
         Entity = self.TableService.get_entity(TableName, PartitionKey, RowKey)
         return Entity
 
+    
+    
     def updateEntity(self, TableName, NewEntity):
         """
         Toma el objeto con los datos actualizados y hace update en la table storage.
@@ -100,6 +107,8 @@ class TableStorage():
         print('\nUpdating entity. PK: ' + NewEntity.PartitionKey + '  RK: ' + NewEntity.RowKey)
         self.TableService.update_entity(TableName, NewEntity)
 
+    
+    
     def deleteEntity(self, TableName, PartitionKey, RowKey):
         """
         Borrar la entidad que coincida en Partition Key y Row Key
@@ -112,6 +121,8 @@ class TableStorage():
         print('\nDeleting entity')
         self.TableService.delete_entity(TableName, PartitionKey, RowKey)
 
+    
+    
     def deleteTable(self, TableName):
         """
         Revisa si la tabla existe y la borra, en caso contrario solo avisa que no existe.

@@ -2,6 +2,7 @@
 # Es una clase escrita en Python para facilitar el uso de los objetos y
 # herramientas de Cognitive Services de Mircrosoft Azure.
 # Se inicializa dando la llave de subscripción y la locación del recurso.
+#
 # Sirve para:
 #   1- Detectar el lenguaje
 #   2- Analizar el sentimiento
@@ -14,7 +15,7 @@
 #   2-. Ingresar el comando "pip install --upgrade azure-cognitiveservices-language-textanalytics"
 #
 # Autor: Noé Amador Campos Castillo.
-# E-mail: ama-noe@hotmail.com
+# E-mail: noecampos@tec.mx
 #--------------------------------------------------------------------------
 
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
