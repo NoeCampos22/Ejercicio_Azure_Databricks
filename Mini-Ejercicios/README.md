@@ -4,12 +4,12 @@ Como nunca había trabajado con los recursos de Azure de esta manera decidí rea
 
 - **Enviar_Recibir_Eventos_EventHub:** 
     - ***Sender.py:*** Es donde puse en práctica el enviar N eventos con una estructura JSON como mensaje. 
-    - ***Receiver.py*** se encarga de leer TODOS los eventos que contiene el Event Hub.
+    - ***Receiver.py*** Se encarga de leer TODOS los eventos que contiene el Event Hub.
     - ***EPH.py:*** A diferencia del script anterior, este sirve para leer los eventos, pero dejar un *checkpoint* para no repetir la lectura de eventos.
 
 - **Guardar_en_Storage:** 
     - ***Ejemplo Microsoft:*** Descargué y corrí una implementación que el mismo Microsoft brinda como ejemplo.
-    - ***Implementación Clase: *** Hice una clase para facilitar el uso del recurso de storage de Azure y la implementé en un *Main.py* como ejemplo.
+    - ***Implementación Clase:*** Hice una clase para facilitar el uso del recurso de storage de Azure y la implementé en un *Main.py* como ejemplo.
 
 - **API_Cognitive_Services:** 
     - ***Ejemplo Microsoft:*** Descargué y corrí una implementación que el mismo Microsoft brinda como ejemplo.
