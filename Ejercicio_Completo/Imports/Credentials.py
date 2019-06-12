@@ -16,28 +16,30 @@ CON_KEY_SECRET = "jON1UNSzhfk4eu5sws7RgLhpNCbkWsu06sRvwrKFjXwfu7uFHG"
 
 #========================== Event Hub ==========================#
 # Nombre del namespace de Event Hubs
-EH_Namespace = "EHTweets"
+EH_Namespace = "ehTweetsNamespace"
 # Dirección URL para conectarse al Event Hub
 # "amqps://<Nombre del Event Hub Namespace>.servicebus.windows.net/<Nombre del Event Hub>"
-EH_Address = "amqps://EHTweets.servicebus.windows.net/eh_tweets"
+EH_Address = "amqps://ehTweetsNamespace.servicebus.windows.net/eh_tweets"
 # Nombre del "Shared Access Policy" configurado en el Event Hub Namespace
 EH_SASName = "RootManageSharedAccessKey"
 # Llave de acceso para esa SAS
-EH_PrimaryKey = "XGpR/C3HHTdKN9NcrSD7nHHbpRglgk0VUmc1hhFlybs="
+EH_PrimaryKey = "/knjLPLvztPMXwAua62yiebka1BQptmCJhi7MhUPmi0="
 
 # Nombre de la instancia del Event Hub
 EH_Name = "eh_tweets"
 # Nombre del SAS Policy de la instancia de Event Hub
-EH_SASUser = "TweetsReceiver"
+EH_SASUser = "TweetsListener"
 # Llave del SAS Policy de la instancia de Event Hub
-EH_SASKey = "qS2Td4Ze5RgXlGxptAsdR5hizNm8NBpf8W2n5f7TcNI="
+EH_SASKey = "PgOMsgAvtRrmHV3gkS6H5W0F6w5xbwlqMPqvORpMq7Y="
 
 #=========================== Storage ===========================#
 # El string de conexión al storage account
-STG_ConnectionString = 'DefaultEndpointsProtocol=https;AccountName=stgeducon;AccountKey=ZSiqHjaX+3yooxOVZbffjbjaKnlMHWyYHBtxH2ANxle3EDMSqZ66cd75HUT0Tr48QPYRJus7XkwPT6aJ2wrAyQ==;EndpointSuffix=core.windows.net'
+STG_ConnectionString = 'DefaultEndpointsProtocol=https;AccountName=stgeducon;AccountKey=uIFr2p05ZeXU8XRBkpgG05eKINZkcxQncyWQOkOxUFKo2AV2fXONkZIGr3YTaFkV6aOGd6qybod/LjFRxtI2Xg==;EndpointSuffix=core.windows.net'
 # Nombre del Blob
 STG_BlobName = "contenedor"
+# Nombre de tabla
+STG_TableName = "Tweets"
 
 #===================== Cognitive Services ======================#
-TA_SubsKey = "48c28dbe3a9d449eab19fa460c01de5e"
+TA_SubsKey = "456e4299826344658c4e0f4cbd815d10"
 TA_Location = "eastus"

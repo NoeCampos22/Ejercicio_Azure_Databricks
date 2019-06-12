@@ -100,10 +100,21 @@ class EventProcessor(AbstractEventProcessor):
         LanguagesRes = TA_CogServices.detectLanguages(TA_Array)
 
         iI = 0  # Indice para moverse en el arreglo de tweets
-        # Se agrega el lenguaje detectado a cada tweet
-        for Doc in LanguagesRes.documents:
-            TA_Array[iI]['language'] = Doc.detected_languages[0].iso6391_name
-            iI += 1
+        iJ = 0  # Indice para moverse en el arreglo de respuestas
+        while(iI < len(TA_Array)):
+            # Obtiene el objeto respuesta
+            Doc = LanguagesRes.documents[iJ]
+
+            # Verifica que tengan el mismo ID el Tweet actual con la respuestaa
+            if(iJ < len(LanguagesRes.documents) and TA_Array[iI]['id'] == Doc.id):
+                # Guarda el lenguaje y avanza en los indices
+                TA_Array[iI]['language'] = Doc.detected_languages[0].iso6391_name
+                iI += 1
+                iJ += 1
+            # Pone como desconocido            
+            else:
+                TA_Array[iI]['language'] = "(Uknown)"
+                iI += 1
 
         # ========== Realizar todos las operaciones ============ #
 
@@ -117,41 +128,87 @@ class EventProcessor(AbstractEventProcessor):
         # =========== Obtener Score del Sentimiento ============ #
 
         iI = 0  # Indice para moverse en el arreglo de tweets
-        # Se agrega el score del sentimiento al tweet
-        for Doc in ScoreRes.documents:
-            TA_Array[iI]['Sentiment_Score'] = float("{:.2f}".format(Doc.score))
-            iI += 1
+        iJ = 0  # Indice para moverse en el arreglo de respuestas
+        while(iI < len(TA_Array)):
+            # Se obtiene el objeto respuesta
+            Doc = ScoreRes.documents[iJ]
+
+            # Revisa que tengan el mismo ID el Tweet actual y la respuesta
+            if(iJ < len(ScoreRes.documents) and TA_Array[iI]['id'] == Doc.id):
+                # Asigna el score
+                TA_Array[iI]['Sentiment_Score'] = float("{:.2f}".format(Doc.score))
+
+                # Revisa si el sentimiento es Positivo, Neutral o Negativo
+                if (Doc.score > 0.65):
+                    TA_Array[iI]['Sentiment'] = "Positive"
+
+                elif (Doc.score >= 0.35 and Doc.score <= 0.65):
+                    TA_Array[iI]['Sentiment'] = "Neutral"
+
+                elif (Doc.score < 0.35):
+                    TA_Array[iI]['Sentiment'] = "Negative"
+
+                iI += 1
+                iJ += 1
+
+            # Lo califica como neutral
+            else:
+                TA_Array[iI]['Sentiment_Score'] = float(0.5555)
+                TA_Array[iI]['Sentiment'] = "Neutral"
+                iI += 1
 
         # ================ Obtener Key Phrases ================= #
 
         iI = 0  # Indice para moverse en el arreglo de tweets
-        # Juntan todas las key phrases en solo string y se agregan al tweet
-        # al que corresponden
-        for Doc in KeyPhrasesRes.documents:
+        iJ = 0  # Indice para moverse en el arreglo de respuestas
+        while(iI < len(TA_Array)):
+            # Obtiene el objeto respuesta
+            Doc = KeyPhrasesRes.documents[iJ]
             strKP = ""  # String temporal
-            # Va por el arreglo de Key Phrases de ese tweet
-            for Phrase in Doc.key_phrases:
-                # Los junta
-                strKP += Phrase + " | "
 
-            # Agrega el atributo
-            TA_Array[iI]['Key_Phrases'] = strKP
-            iI += 1
+            # Verifica que tengan el mismo ID el Tweet actual con la respuestaa
+            if(iJ < len(KeyPhrasesRes.documents) and TA_Array[iI]['id'] == Doc.id):
+                
+                # Va por el arreglo de Key Phrases de ese tweet
+                for Phrase in Doc.key_phrases:
+                    # Los junta
+                    strKP += Phrase + " | "
+
+                # Agrega el atributo
+                TA_Array[iI]['Key_Phrases'] = strKP
+                iI += 1
+                iJ += 1
+            # Pone como desconocido
+            else:
+                TA_Array[iI]['Key_Phrases'] = strKP
+                iI += 1
 
         # ================== Obtener Entidades ================== #
 
         iI = 0  # Indice para moverse en el arreglo de tweets
-        # Junta todas las entidades de cada Tweet
-        for Doc in EntitiesRes.documents:
-            strEnt = ""  # String temporal
-            # Va por el arreglo de Entities de ese tweet
-            for Entity in Doc.entities:
-                # Junta las entidades
-                strEnt += Entity.name + " | "
+        iJ = 0  # Indice para moverse en el arreglo de respuestas
+        while(iI < len(TA_Array)):
+            # Obtiene el objeto respuesta
+            Doc = EntitiesRes.documents[iJ]
+            strEnt = "" #String temporal
 
-            # Agrega el atributo
-            TA_Array[iI]['Entities'] = strEnt
-            iI += 1
+            # Verifica que tengan el mismo ID el Tweet actual con la respuestaa
+            if(iJ < len(EntitiesRes.documents) and TA_Array[iI]['id'] == Doc.id):
+                
+                # Va por el arreglo de Entities de ese tweet
+                for Entity in Doc.entities:
+                    # Junta las entidades
+                    strEnt += Entity.name + " | "
+                
+                # Agrega el atributo
+                TA_Array[iI]['Entities'] = strEnt
+                iI += 1
+                iJ += 1
+            # Pone como desconocido            
+            else:
+                # Agrega el atributo
+                TA_Array[iI]['Entities'] = strEnt
+                iI += 1
 
         # Se cambia la cambia el row de "id" a "Rowkey"
         STG_Array = json.loads(json.dumps(TA_Array).replace("\"id\":", "\"RowKey\":"))
@@ -160,7 +217,7 @@ class EventProcessor(AbstractEventProcessor):
         # Por cada evento...
         for Tweet in STG_Array:
             # Se agrega a la tabla el tweet
-            STG_Table.insertEntity("Tweets", Tweet)
+            STG_Table.insertEntity(Credentials.STG_TableName, Tweet)
             print(".")
 
         # Deja un checkpoint del evento recibido
