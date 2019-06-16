@@ -34,8 +34,8 @@ else:
                   for s in account_connection_string.split(';') if s)
 
     # Authentication
-    account_name = "stgeducon"
-    account_key = "ZSiqHjaX+3yooxOVZbffjbjaKnlMHWyYHBtxH2ANxle3EDMSqZ66cd75HUT0Tr48QPYRJus7XkwPT6aJ2wrAyQ=="
+    account_name = "-"
+    account_key = "-"
     # Basic URL Configuration
     endpoint_suffix = config.get('EndpointSuffix')
 
