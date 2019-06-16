@@ -9,37 +9,37 @@
 
 #========================== Twitter App ==========================#
 # Variables con las llaves de acceso a la aplicación de Twitter
-ACC_TOKEN = "1102066975541469184-TbS4fYGEvmq0Jltl91vs6E1dvVCqNO"
-ACC_TOKEN_SECRET = "RCX08QzpIrnG2DmjEs8wTje0QDS9FdVsFTto1KW1M98b5"
-CON_KEY = "o15XnHDzDvGWv3l1enwV58yBq"
-CON_KEY_SECRET = "jON1UNSzhfk4eu5sws7RgLhpNCbkWsu06sRvwrKFjXwfu7uFHG"
+ACC_TOKEN = "-"
+ACC_TOKEN_SECRET = "-"
+CON_KEY = "-"
+CON_KEY_SECRET = "-"
 
 #========================== Event Hub ==========================#
 # Nombre del namespace de Event Hubs
-EH_Namespace = "ehTweetsNamespace"
+EH_Namespace = "-"
 # Dirección URL para conectarse al Event Hub
 # "amqps://<Nombre del Event Hub Namespace>.servicebus.windows.net/<Nombre del Event Hub>"
-EH_Address = "amqps://ehTweetsNamespace.servicebus.windows.net/eh_tweets"
+EH_Address = "-"
 # Nombre del "Shared Access Policy" configurado en el Event Hub Namespace
-EH_SASName = "RootManageSharedAccessKey"
+EH_SASName = "-"
 # Llave de acceso para esa SAS
-EH_PrimaryKey = "/knjLPLvztPMXwAua62yiebka1BQptmCJhi7MhUPmi0="
+EH_PrimaryKey = "-"
 
 # Nombre de la instancia del Event Hub
-EH_Name = "eh_tweets"
+EH_Name = "-"
 # Nombre del SAS Policy de la instancia de Event Hub
-EH_SASUser = "TweetsListener"
+EH_SASUser = "-"
 # Llave del SAS Policy de la instancia de Event Hub
-EH_SASKey = "PgOMsgAvtRrmHV3gkS6H5W0F6w5xbwlqMPqvORpMq7Y="
+EH_SASKey = "-"
 
 #=========================== Storage ===========================#
 # El string de conexión al storage account
-STG_ConnectionString = 'DefaultEndpointsProtocol=https;AccountName=stgeducon;AccountKey=uIFr2p05ZeXU8XRBkpgG05eKINZkcxQncyWQOkOxUFKo2AV2fXONkZIGr3YTaFkV6aOGd6qybod/LjFRxtI2Xg==;EndpointSuffix=core.windows.net'
+STG_ConnectionString = '-'
 # Nombre del Blob
-STG_BlobName = "contenedor"
+STG_BlobName = "-"
 # Nombre de tabla
-STG_TableName = "Tweets"
+STG_TableName = "_"
 
 #===================== Cognitive Services ======================#
-TA_SubsKey = "456e4299826344658c4e0f4cbd815d10"
-TA_Location = "eastus"
+TA_SubsKey = "-"
+TA_Location = "-"
